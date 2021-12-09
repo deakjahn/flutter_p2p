@@ -12,12 +12,9 @@ part of 'flutter_p2p.dart';
 
 class SocketMaster {
   static const _channelBase = FlutterP2p.channelBase;
-
   var _socketReadChannel = EventChannel("$_channelBase/socket/read");
-
-  Map<int, P2pSocket> sockets = {};
-
-  Stream<SocketMessage> _readStream;
+  final sockets = <int, P2pSocket>{};
+  late Stream<SocketMessage> _readStream;
 
   SocketMaster() {
     _readStream = _socketReadChannel.receiveBroadcastStream().map((a) {
@@ -41,14 +38,11 @@ class SocketMaster {
       );
     }
 
-    return sockets[port];
+    return sockets[port]!;
   }
 
   unregisterServerPort(int port) {
-    if (sockets[port] == null) {
-      throw Exception("The port $port is not registered.");
-    }
-
+    if (sockets[port] == null) throw Exception("The port $port is not registered.");
     sockets.remove(port);
   }
 }

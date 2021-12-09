@@ -20,8 +20,13 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.IntentFilter
 import android.net.wifi.p2p.WifiP2pManager
+import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import androidx.annotation.NonNull
+import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import java.lang.reflect.Method
 import java.util.HashMap
 import android.content.pm.PackageManager
@@ -31,18 +36,49 @@ import de.mintware.flutter_p2p.utility.EventChannelPool
 import de.mintware.flutter_p2p.wifi_direct.ResultActionListener
 import de.mintware.flutter_p2p.wifi_direct.SocketPool
 import de.mintware.flutter_p2p.wifi_direct.WiFiDirectBroadcastReceiver
+import android.app.Activity
 
-
-class FlutterP2pPlugin(private val registrar: Registrar
-) : MethodCallHandler {
-
+class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
+    private var activity: Activity? = null
+    private lateinit var context: Context
+    private lateinit var platform: MethodChannel
     private val intentFilter = IntentFilter()
     private var receiver: WiFiDirectBroadcastReceiver? = null
-    private val eventPool: EventChannelPool = EventChannelPool(registrar.messenger())
+    private lateinit var eventPool: EventChannelPool
     private lateinit var socketPool: SocketPool
 
     private lateinit var channel: WifiP2pManager.Channel
     private lateinit var manager: WifiP2pManager
+
+    override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+        context = flutterPluginBinding.applicationContext
+        platform = MethodChannel(flutterPluginBinding.binaryMessenger, "de.mintware.flutter_p2p/flutter_p2p")
+        platform.setMethodCallHandler(this)
+        eventPool = EventChannelPool(flutterPluginBinding.binaryMessenger)
+        setupEventPool()
+        setupIntentFilters()
+        setupWifiP2pManager()
+    }
+
+    override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+        platform.setMethodCallHandler(null)
+    }
+
+    override fun onAttachedToActivity(activityPluginBinding: ActivityPluginBinding) {
+        activity = activityPluginBinding.getActivity()
+    }
+
+    override fun onDetachedFromActivityForConfigChanges() {
+        activity = null
+    }
+
+    override fun onReattachedToActivityForConfigChanges(activityPluginBinding: ActivityPluginBinding) {
+        activity = activityPluginBinding.getActivity()
+    }
+
+    override fun onDetachedFromActivity() {
+        activity = null
+    }
 
     companion object {
         private const val REQUEST_ENABLE_LOCATION = 600
@@ -53,20 +89,6 @@ class FlutterP2pPlugin(private val registrar: Registrar
         private const val CH_DISCOVERY_CHANGE = "bc/discovery-change"
         private const val CH_SOCKET_READ = "socket/read"
         val config: Config = Config()
-
-        @JvmStatic
-        fun registerWith(registrar: Registrar) {
-            val channel = MethodChannel(registrar.messenger(), "de.mintware.flutter_p2p/flutter_p2p")
-
-            val plugin = FlutterP2pPlugin(registrar)
-            plugin.setupEventPool()
-            channel.setMethodCallHandler(plugin)
-        }
-    }
-
-    init {
-        setupIntentFilters()
-        setupWifiP2pManager()
     }
 
     fun setupEventPool() {
@@ -96,8 +118,8 @@ class FlutterP2pPlugin(private val registrar: Registrar
     }
 
     private fun setupWifiP2pManager() {
-        manager = registrar.context().getSystemService(Context.WIFI_P2P_SERVICE) as WifiP2pManager
-        channel = manager.initialize(registrar.context(), Looper.getMainLooper(), null)
+        manager = context.getSystemService(Context.WIFI_P2P_SERVICE) as WifiP2pManager
+        channel = manager.initialize(context, Looper.getMainLooper(), null)
     }
 
 
@@ -110,7 +132,7 @@ class FlutterP2pPlugin(private val registrar: Registrar
     @Suppress("unused", "UNUSED_PARAMETER")
     private fun requestLocationPermission(call: MethodCall, result: Result) {
         val perm = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-        registrar.activity().requestPermissions(perm, REQUEST_ENABLE_LOCATION)
+        activity?.requestPermissions(perm, REQUEST_ENABLE_LOCATION)
         result.success(true)
     }
 
@@ -118,7 +140,7 @@ class FlutterP2pPlugin(private val registrar: Registrar
     @Suppress("unused", "UNUSED_PARAMETER")
     private fun isLocationPermissionGranted(call: MethodCall, result: Result) {
         val permission = Manifest.permission.ACCESS_FINE_LOCATION
-        result.success(PackageManager.PERMISSION_GRANTED == registrar.context().checkSelfPermission(permission))
+        result.success(PackageManager.PERMISSION_GRANTED == context.checkSelfPermission(permission))
     }
     //endregion
 
@@ -147,7 +169,7 @@ class FlutterP2pPlugin(private val registrar: Registrar
                 eventPool.getHandler(CH_DEVICE_CHANGE).sink,
                 eventPool.getHandler(CH_DISCOVERY_CHANGE).sink
         )
-        registrar.context().registerReceiver(receiver, intentFilter)
+        context.registerReceiver(receiver, intentFilter)
         result.success(true)
     }
 
@@ -165,7 +187,7 @@ class FlutterP2pPlugin(private val registrar: Registrar
             return
         }
 
-        registrar.context().unregisterReceiver(receiver)
+        context.unregisterReceiver(receiver)
         result.success(true)
     }
     //endregion
@@ -331,40 +353,43 @@ class FlutterP2pPlugin(private val registrar: Registrar
     // endregion
 
     // region MethodCallHandler
-    private val methodMap = HashMap<String, Method>()
-
-    override fun onMethodCall(call: MethodCall, result: Result) {
-        if (methodMap.isEmpty()) {
-            fetchMethods()
-        }
-
-        val method = methodMap[call.method]
-        if (null == method) {
-            result.notImplemented()
-            return
-        }
-
-        Log.v(TAG, "Method: " + call.method)
-        val args = arrayOfNulls<Any>(2)
-        args[0] = call
-        args[1] = result
-
-        try {
-            method.invoke(this, *args)
-        } catch (e: Exception) {
-            result.error(call.method, e.message, e)
-        }
-
-    }
-
-    private fun fetchMethods() {
-
-        val c = this::class.java
-        val m = c.declaredMethods
-
-        for (method in m) {
-            methodMap[method.name] = method
+    override fun onMethodCall(call: MethodCall, rawResult: Result) {
+        val result = MethodResultWrapper(rawResult)
+        when (call.method) {
+            "requestLocationPermission" -> requestLocationPermission(call, result)
+            "isLocationPermissionGranted" -> isLocationPermissionGranted(call, result)
+            "register" -> register(call, result)
+            "unregister" -> unregister(call, result)
+            "discover" -> discover(call, result)
+            "stopDiscover" -> stopDiscover(call, result)
+            "connect" -> connect(call, result)
+            "cancelConnect" -> cancelConnect(call, result)
+            "removeGroup" -> removeGroup(call, result)
+            "openHostPort" -> openHostPort(call, result)
+            "closeHostPort" -> closeHostPort(call, result)
+            "acceptPort" -> acceptPort(call, result)
+            "connectToHost" -> connectToHost(call, result)
+            "disconnectFromHost" -> disconnectFromHost(call, result)
+            "sendDataToHost" -> sendDataToHost(call, result)
+            "sendDataToClient" -> sendDataToClient(call, result)
+            else -> result.notImplemented()
         }
     }
     //endregion
+
+    private class MethodResultWrapper(private val methodResult: Result) : Result {
+        private val handler: Handler = Handler(Looper.getMainLooper())
+
+        override fun success(result: Any?) {
+            handler.post { methodResult.success(result) }
+        }
+
+        override fun error(errorCode: String, errorMessage: String?, errorDetails: Any?) {
+            handler.post { methodResult.error(errorCode, errorMessage, errorDetails) }
+        }
+
+        override fun notImplemented() {
+            handler.post { methodResult.notImplemented() }
+        }
+    }
 }

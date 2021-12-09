@@ -2,9 +2,14 @@
 //  Generated code. Do not modify.
 //  source: protos/protos.proto
 //
-// @dart = 2.3
-// ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type
+// @dart = 2.12
+// ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields,deprecated_member_use_from_same_package
 
+import 'dart:core' as $core;
+import 'dart:convert' as $convert;
+import 'dart:typed_data' as $typed_data;
+
+@$core.Deprecated('Use stateChangeDescriptor instead')
 const StateChange$json = const {
   '1': 'StateChange',
   '2': const [
@@ -12,6 +17,10 @@ const StateChange$json = const {
   ],
 };
 
+/// Descriptor for `StateChange`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List stateChangeDescriptor = $convert.base64Decode(
+    'CgtTdGF0ZUNoYW5nZRIcCglpc0VuYWJsZWQYASABKAhSCWlzRW5hYmxlZA==');
+@$core.Deprecated('Use wifiP2pDeviceDescriptor instead')
 const WifiP2pDevice$json = const {
   '1': 'WifiP2pDevice',
   '2': const [
@@ -72,6 +81,7 @@ const WifiP2pDevice$json = const {
   '4': const [WifiP2pDevice_Status$json],
 };
 
+@$core.Deprecated('Use wifiP2pDeviceDescriptor instead')
 const WifiP2pDevice_Status$json = const {
   '1': 'Status',
   '2': const [
@@ -83,6 +93,10 @@ const WifiP2pDevice_Status$json = const {
   ],
 };
 
+/// Descriptor for `WifiP2pDevice`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List wifiP2pDeviceDescriptor = $convert.base64Decode(
+    'Cg1XaWZpUDJwRGV2aWNlEigKD3dwc1BiY1N1cHBvcnRlZBgBIAEoCFIPd3BzUGJjU3VwcG9ydGVkEi4KEndwc0tleXBhZFN1cHBvcnRlZBgCIAEoCFISd3BzS2V5cGFkU3VwcG9ydGVkEjAKE3dwc0Rpc3BsYXlTdXBwb3J0ZWQYAyABKAhSE3dwc0Rpc3BsYXlTdXBwb3J0ZWQSPAoZaXNTZXJ2aWNlRGlzY292ZXJ5Q2FwYWJsZRgEIAEoCFIZaXNTZXJ2aWNlRGlzY292ZXJ5Q2FwYWJsZRIiCgxpc0dyb3VwT3duZXIYBSABKAhSDGlzR3JvdXBPd25lchIeCgpkZXZpY2VOYW1lGAYgASgJUgpkZXZpY2VOYW1lEiQKDWRldmljZUFkZHJlc3MYByABKAlSDWRldmljZUFkZHJlc3MSLAoRcHJpbWFyeURldmljZVR5cGUYCCABKAlSEXByaW1hcnlEZXZpY2VUeXBlEjAKE3NlY29uZGFyeURldmljZVR5cGUYCSABKAlSE3NlY29uZGFyeURldmljZVR5cGUSLQoGc3RhdHVzGAogASgOMhUuV2lmaVAycERldmljZS5TdGF0dXNSBnN0YXR1cyJQCgZTdGF0dXMSDQoJQ09OTkVDVEVEEAASCwoHSU5WSVRFRBABEgoKBkZBSUxFRBACEg0KCUFWQUlMQUJMRRADEg8KC1VOQVZBSUxBQkxFEAQ=');
+@$core.Deprecated('Use wifiP2pDeviceListDescriptor instead')
 const WifiP2pDeviceList$json = const {
   '1': 'WifiP2pDeviceList',
   '2': const [
@@ -97,6 +111,10 @@ const WifiP2pDeviceList$json = const {
   ],
 };
 
+/// Descriptor for `WifiP2pDeviceList`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List wifiP2pDeviceListDescriptor = $convert.base64Decode(
+    'ChFXaWZpUDJwRGV2aWNlTGlzdBIoCgdkZXZpY2VzGAEgAygLMg4uV2lmaVAycERldmljZVIHZGV2aWNlcw==');
+@$core.Deprecated('Use connectionChangeDescriptor instead')
 const ConnectionChange$json = const {
   '1': 'ConnectionChange',
   '2': const [
@@ -119,6 +137,10 @@ const ConnectionChange$json = const {
   ],
 };
 
+/// Descriptor for `ConnectionChange`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List connectionChangeDescriptor = $convert.base64Decode(
+    'ChBDb25uZWN0aW9uQ2hhbmdlEi4KC3dpZmlQMnBJbmZvGAEgASgLMgwuV2lmaVAycEluZm9SC3dpZmlQMnBJbmZvEi4KC25ldHdvcmtJbmZvGAIgASgLMgwuTmV0d29ya0luZm9SC25ldHdvcmtJbmZv');
+@$core.Deprecated('Use wifiP2pInfoDescriptor instead')
 const WifiP2pInfo$json = const {
   '1': 'WifiP2pInfo',
   '2': const [
@@ -134,6 +156,10 @@ const WifiP2pInfo$json = const {
   ],
 };
 
+/// Descriptor for `WifiP2pInfo`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List wifiP2pInfoDescriptor = $convert.base64Decode(
+    'CgtXaWZpUDJwSW5mbxIgCgtncm91cEZvcm1lZBgBIAEoCFILZ3JvdXBGb3JtZWQSIgoMaXNHcm91cE93bmVyGAIgASgIUgxpc0dyb3VwT3duZXISLAoRZ3JvdXBPd25lckFkZHJlc3MYAyABKAlSEWdyb3VwT3duZXJBZGRyZXNz');
+@$core.Deprecated('Use networkInfoDescriptor instead')
 const NetworkInfo$json = const {
   '1': 'NetworkInfo',
   '2': const [
@@ -152,6 +178,7 @@ const NetworkInfo$json = const {
   '4': const [NetworkInfo_DetailedState$json],
 };
 
+@$core.Deprecated('Use networkInfoDescriptor instead')
 const NetworkInfo_DetailedState$json = const {
   '1': 'DetailedState',
   '2': const [
@@ -171,6 +198,10 @@ const NetworkInfo_DetailedState$json = const {
   ],
 };
 
+/// Descriptor for `NetworkInfo`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List networkInfoDescriptor = $convert.base64Decode(
+    'CgtOZXR3b3JrSW5mbxIYCgdzdWJUeXBlGAEgASgFUgdzdWJUeXBlEiAKC2lzQ29ubmVjdGVkGAIgASgIUgtpc0Nvbm5lY3RlZBJACg1kZXRhaWxlZFN0YXRlGAMgASgOMhouTmV0d29ya0luZm8uRGV0YWlsZWRTdGF0ZVINZGV0YWlsZWRTdGF0ZRIcCglleHRyYUluZm8YBCABKAlSCWV4dHJhSW5mbyLwAQoNRGV0YWlsZWRTdGF0ZRIICgRJRExFEAASDAoIU0NBTk5JTkcQARIOCgpDT05ORUNUSU5HEAISEgoOQVVUSEVOVElDQVRJTkcQAxIUChBPQlRBSU5JTkdfSVBBRERSEAQSDQoJQ09OTkVDVEVEEAUSDQoJU1VTUEVOREVEEAYSEQoNRElTQ09OTkVDVElORxAHEhAKDERJU0NPTk5FQ1RFRBAIEgoKBkZBSUxFRBAJEgsKB0JMT0NLRUQQChIXChNWRVJJRllJTkdfUE9PUl9MSU5LEAsSGAoUQ0FQVElWRV9QT1JUQUxfQ0hFQ0sQDA==');
+@$core.Deprecated('Use requestPermissionResultDescriptor instead')
 const RequestPermissionResult$json = const {
   '1': 'RequestPermissionResult',
   '2': const [
@@ -185,6 +216,11 @@ const RequestPermissionResult$json = const {
   ],
 };
 
+/// Descriptor for `RequestPermissionResult`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List requestPermissionResultDescriptor =
+    $convert.base64Decode(
+        'ChdSZXF1ZXN0UGVybWlzc2lvblJlc3VsdBIgCgtyZXF1ZXN0Q29kZRgBIAEoBVILcmVxdWVzdENvZGUSLgoSZ3JhbnRlZFBlcm1pc3Npb25zGAIgAygJUhJncmFudGVkUGVybWlzc2lvbnM=');
+@$core.Deprecated('Use socketMessageDescriptor instead')
 const SocketMessage$json = const {
   '1': 'SocketMessage',
   '2': const [
@@ -194,9 +230,17 @@ const SocketMessage$json = const {
   ],
 };
 
+/// Descriptor for `SocketMessage`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List socketMessageDescriptor = $convert.base64Decode(
+    'Cg1Tb2NrZXRNZXNzYWdlEhIKBHBvcnQYASABKAVSBHBvcnQSJAoNZGF0YUF2YWlsYWJsZRgCIAEoBVINZGF0YUF2YWlsYWJsZRISCgRkYXRhGAMgASgMUgRkYXRh');
+@$core.Deprecated('Use discoveryStateChangeDescriptor instead')
 const DiscoveryStateChange$json = const {
   '1': 'DiscoveryStateChange',
   '2': const [
     const {'1': 'isDiscovering', '3': 1, '4': 1, '5': 8, '10': 'isDiscovering'},
   ],
 };
+
+/// Descriptor for `DiscoveryStateChange`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List discoveryStateChangeDescriptor = $convert.base64Decode(
+    'ChREaXNjb3ZlcnlTdGF0ZUNoYW5nZRIkCg1pc0Rpc2NvdmVyaW5nGAEgASgIUg1pc0Rpc2NvdmVyaW5n');

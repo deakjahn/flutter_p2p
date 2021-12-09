@@ -10,3 +10,4 @@ build/
 local.properties
 example/.flutter-plugins-dependencies
 pubspec.lock
+generate_proto.*
