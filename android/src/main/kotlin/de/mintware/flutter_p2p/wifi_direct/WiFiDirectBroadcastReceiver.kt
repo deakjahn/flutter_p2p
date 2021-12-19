@@ -20,6 +20,7 @@ import android.net.wifi.p2p.WifiP2pManager
 import de.mintware.flutter_p2p.Protos
 import de.mintware.flutter_p2p.utility.ProtoHelper
 import io.flutter.plugin.common.EventChannel
+import android.util.Log
 
 class WiFiDirectBroadcastReceiver(private val manager: WifiP2pManager,
                                   private val channel: WifiP2pManager.Channel,
@@ -77,7 +78,6 @@ class WiFiDirectBroadcastReceiver(private val manager: WifiP2pManager,
     val state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1)
     val isConnected = state == WifiP2pManager.WIFI_P2P_STATE_ENABLED
     val stateChange: Protos.StateChange = ProtoHelper.create(isConnected)
-
     stateChangedSink?.success(stateChange.toByteArray())
   }
 

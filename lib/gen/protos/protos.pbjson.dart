@@ -1,6 +1,6 @@
 ///
 //  Generated code. Do not modify.
-//  source: protos/protos.proto
+//  source: protos.proto
 //
 // @dart = 2.12
 // ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields,deprecated_member_use_from_same_package
@@ -114,6 +114,47 @@ const WifiP2pDeviceList$json = const {
 /// Descriptor for `WifiP2pDeviceList`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List wifiP2pDeviceListDescriptor = $convert.base64Decode(
     'ChFXaWZpUDJwRGV2aWNlTGlzdBIoCgdkZXZpY2VzGAEgAygLMg4uV2lmaVAycERldmljZVIHZGV2aWNlcw==');
+@$core.Deprecated('Use wifiP2pServiceDescriptor instead')
+const WifiP2pService$json = const {
+  '1': 'WifiP2pService',
+  '2': const [
+    const {
+      '1': 'device',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.WifiP2pDevice',
+      '10': 'device'
+    },
+    const {'1': 'instance', '3': 2, '4': 1, '5': 9, '10': 'instance'},
+    const {'1': 'registration', '3': 3, '4': 1, '5': 9, '10': 'registration'},
+    const {'1': 'domain', '3': 4, '4': 1, '5': 9, '10': 'domain'},
+    const {
+      '1': 'txt',
+      '3': 5,
+      '4': 3,
+      '5': 11,
+      '6': '.WifiP2pService.TxtEntry',
+      '10': 'txt'
+    },
+    const {'1': 'uniqueNames', '3': 6, '4': 3, '5': 9, '10': 'uniqueNames'},
+  ],
+  '3': const [WifiP2pService_TxtEntry$json],
+};
+
+@$core.Deprecated('Use wifiP2pServiceDescriptor instead')
+const WifiP2pService_TxtEntry$json = const {
+  '1': 'TxtEntry',
+  '2': const [
+    const {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    const {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
+  ],
+  '7': const {'7': true},
+};
+
+/// Descriptor for `WifiP2pService`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List wifiP2pServiceDescriptor = $convert.base64Decode(
+    'Cg5XaWZpUDJwU2VydmljZRImCgZkZXZpY2UYASABKAsyDi5XaWZpUDJwRGV2aWNlUgZkZXZpY2USGgoIaW5zdGFuY2UYAiABKAlSCGluc3RhbmNlEiIKDHJlZ2lzdHJhdGlvbhgDIAEoCVIMcmVnaXN0cmF0aW9uEhYKBmRvbWFpbhgEIAEoCVIGZG9tYWluEioKA3R4dBgFIAMoCzIYLldpZmlQMnBTZXJ2aWNlLlR4dEVudHJ5UgN0eHQSIAoLdW5pcXVlTmFtZXMYBiADKAlSC3VuaXF1ZU5hbWVzGjYKCFR4dEVudHJ5EhAKA2tleRgBIAEoCVIDa2V5EhQKBXZhbHVlGAIgASgJUgV2YWx1ZToCOAE=');
 @$core.Deprecated('Use connectionChangeDescriptor instead')
 const ConnectionChange$json = const {
   '1': 'ConnectionChange',

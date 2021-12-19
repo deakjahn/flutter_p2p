@@ -52,6 +52,17 @@ class ProtoHelper {
                     .build()
         }
 
+        fun create(device: WifiP2pDevice, instance: String?, registration: String?, domain: String?, txt: Map<String, String>, uniqueNames: List<String>): Protos.WifiP2pService {
+            return Protos.WifiP2pService.newBuilder()
+                    .setDevice(create(device))
+                    .setInstance(instance ?: "")
+                    .setRegistration(registration ?: "")
+                    .setDomain(domain ?: "")
+                    .putAllTxt(txt)
+                    .addAllUniqueNames(uniqueNames)
+                    .build()
+        }
+
         fun create(p2pInfo: WifiP2pInfo, networkInfo: NetworkInfo): Protos.ConnectionChange {
             return Protos.ConnectionChange.newBuilder()
                     .setWifiP2PInfo(create(p2pInfo))

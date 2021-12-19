@@ -19,39 +19,64 @@ class FlutterP2p {
   static SocketMaster _socketMaster = SocketMaster();
 
   static Future<bool> isLocationPermissionGranted() async {
-    return await _channel.invokeMethod("isLocationPermissionGranted", {});
+    final result = await _channel.invokeMethod<bool>("isLocationPermissionGranted", {});
+    return result!;
   }
 
   static Future<bool> requestLocationPermission() async {
-    return await _channel.invokeMethod("requestLocationPermission", {});
+    final result = await _channel.invokeMethod<bool>("requestLocationPermission", {});
+    return result!;
   }
 
   static Future<bool> register() async {
-    return await _channel.invokeMethod("register", {});
+    final result = await _channel.invokeMethod<bool>("register", {});
+    return result!;
   }
 
   static Future<bool> unregister() async {
-    return await _channel.invokeMethod("unregister", {});
+    final result = await _channel.invokeMethod<bool>("unregister", {});
+    return result!;
   }
 
   static Future<bool> discoverDevices() async {
-    return await _channel.invokeMethod("discover", {});
+    final result = await _channel.invokeMethod<bool>("discover", {});
+    return result!;
   }
 
   static Future<bool> stopDiscoverDevices() async {
-    return await _channel.invokeMethod("stopDiscover", {});
+    final result = await _channel.invokeMethod<bool>("stopDiscover", {});
+    return result!;
   }
 
-  static Future<bool> connect(WifiP2pDevice device) async {
-    return await _channel.invokeMethod("connect", {"payload": device.writeToBuffer()});
+  static Future<bool> discoverServices(
+      String upnpType,
+      String dndType,
+      ) async {
+    final result = await _channel.invokeMethod<bool>("discoverServices", {
+      "upnp": upnpType,
+      "dnd": dndType,
+    });
+    return result!;
+  }
+
+  static Future<bool> stopDiscoverServices() async {
+    final result = await _channel.invokeMethod<bool>("stopDiscoverServices", {});
+    return result!;
+  }
+
+ static Future<bool> connect(WifiP2pDevice device) async {
+    final result = await _channel.invokeMethod<bool>("connect", {"payload": device.writeToBuffer()});
+    return result!;
   }
 
   static Future<bool> cancelConnect(WifiP2pDevice device) async {
-    return await _channel.invokeMethod("cancelConnect", {});
+    final result = await _channel.invokeMethod<bool>("cancelConnect", {});
+    return result!;
   }
 
   static Future<bool> removeGroup() async {
-    return await _channel.invokeMethod("removeGroup", {});
+    final result = await _channel.invokeMethod<bool>("removeGroup", {});
+    return result!;
   }
 
   static Future<P2pSocket> openHostPort(int port) async {
@@ -65,7 +90,8 @@ class FlutterP2p {
   }
 
   static Future<bool> acceptPort(int port) async {
-    return await _channel.invokeMethod("acceptPort", {"port": port});
+    final result = await _channel.invokeMethod<bool>("acceptPort", {"port": port});
+    return result!;
   }
 
   static Future<P2pSocket?> connectToHost(
@@ -84,9 +110,10 @@ class FlutterP2p {
   }
 
   static Future<bool> disconnectFromHost(int port) async {
-    return await _channel.invokeMethod("disconnectFromHost", {
+    final result = await _channel.invokeMethod<bool>("disconnectFromHost", {
       "port": port,
     });
+    return result!;
   }
 
   static Future<bool> sendData(int port, bool isHost, Uint8List data) async {
@@ -96,8 +123,9 @@ class FlutterP2p {
     req.dataAvailable = 0;
 
     var action = isHost ? "sendDataToClient" : "sendDataToHost";
-    return await _channel.invokeMethod(action, {
+    final result = await _channel.invokeMethod<bool>(action, {
       "payload": req.writeToBuffer(),
     });
+    return result!;
   }
 }

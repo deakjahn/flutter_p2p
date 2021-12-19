@@ -37,6 +37,15 @@ message WifiP2pDeviceList {
     repeated WifiP2pDevice devices = 1;
 }
 
+message WifiP2pService {
+    WifiP2pDevice device = 1;
+    string instance = 2;
+    string registration = 3;
+    string domain = 4;
+    map<string, string> txt = 5;
+    repeated string uniqueNames = 6;
+}
+
 message ConnectionChange {
     WifiP2pInfo wifiP2pInfo = 1;
     NetworkInfo networkInfo = 2;

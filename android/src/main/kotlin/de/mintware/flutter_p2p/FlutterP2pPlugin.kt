@@ -20,6 +20,8 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.IntentFilter
 import android.net.wifi.p2p.WifiP2pManager
+import android.net.wifi.p2p.nsd.WifiP2pUpnpServiceRequest
+import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -34,9 +36,15 @@ import android.net.wifi.p2p.WifiP2pConfig
 import androidx.annotation.Keep
 import de.mintware.flutter_p2p.utility.EventChannelPool
 import de.mintware.flutter_p2p.wifi_direct.ResultActionListener
+import de.mintware.flutter_p2p.wifi_direct.SuccessActionListener
+import de.mintware.flutter_p2p.wifi_direct.DndServiceListener
+import de.mintware.flutter_p2p.wifi_direct.DndServiceTxtListener
+import de.mintware.flutter_p2p.wifi_direct.UpnpServiceListener
 import de.mintware.flutter_p2p.wifi_direct.SocketPool
 import de.mintware.flutter_p2p.wifi_direct.WiFiDirectBroadcastReceiver
 import android.app.Activity
+import kotlinx.coroutines.*
+import kotlin.coroutines.*
 
 class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private var activity: Activity? = null
@@ -46,7 +54,6 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private var receiver: WiFiDirectBroadcastReceiver? = null
     private lateinit var eventPool: EventChannelPool
     private lateinit var socketPool: SocketPool
-
     private lateinit var channel: WifiP2pManager.Channel
     private lateinit var manager: WifiP2pManager
 
@@ -87,6 +94,7 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         private const val CH_CON_CHANGE = "bc/connection-change"
         private const val CH_DEVICE_CHANGE = "bc/this-device-change"
         private const val CH_DISCOVERY_CHANGE = "bc/discovery-change"
+        private const val CH_SERVICES_CHANGE = "bc/services-change"
         private const val CH_SOCKET_READ = "socket/read"
         val config: Config = Config()
     }
@@ -98,6 +106,7 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         eventPool.register(CH_DEVICE_CHANGE)
         eventPool.register(CH_SOCKET_READ)
         eventPool.register(CH_DISCOVERY_CHANGE)
+        eventPool.register(CH_SERVICES_CHANGE)
 
         socketPool = SocketPool(eventPool.getHandler(CH_SOCKET_READ))
     }
@@ -160,17 +169,22 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             return
         }
 
-        receiver = WiFiDirectBroadcastReceiver(
-                manager,
-                channel,
-                eventPool.getHandler(CH_STATE_CHANGE).sink,
-                eventPool.getHandler(CH_PEERS_CHANGE).sink,
-                eventPool.getHandler(CH_CON_CHANGE).sink,
-                eventPool.getHandler(CH_DEVICE_CHANGE).sink,
-                eventPool.getHandler(CH_DISCOVERY_CHANGE).sink
-        )
-        context.registerReceiver(receiver, intentFilter)
-        result.success(true)
+        try {
+            receiver = WiFiDirectBroadcastReceiver(
+                    manager,
+                    channel,
+                    eventPool.getHandler(CH_STATE_CHANGE).sink,
+                    eventPool.getHandler(CH_PEERS_CHANGE).sink,
+                    eventPool.getHandler(CH_CON_CHANGE).sink,
+                    eventPool.getHandler(CH_DEVICE_CHANGE).sink,
+                    eventPool.getHandler(CH_DISCOVERY_CHANGE).sink,
+            )
+            context.registerReceiver(receiver, intentFilter)
+            result.success(true)
+        }
+        catch (e: Exception) {
+            result.success(false)
+        }
     }
 
     /**
@@ -187,8 +201,13 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             return
         }
 
-        context.unregisterReceiver(receiver)
-        result.success(true)
+        try {
+            context.unregisterReceiver(receiver)
+            result.success(true)
+        }
+        catch (e: Exception) {
+            result.success(false)
+        }
     }
     //endregion
 
@@ -216,6 +235,58 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     @Suppress("unused", "UNUSED_PARAMETER")
     fun stopDiscover(call: MethodCall, result: Result) {
         manager.stopPeerDiscovery(channel, ResultActionListener(result))
+    }
+
+    suspend private fun setupUpnp(type: String): Boolean =
+        suspendCoroutine { cont ->
+            manager.addServiceRequest(channel, WifiP2pUpnpServiceRequest.newInstance(type), SuccessActionListener(cont))
+        }
+
+    suspend private fun setupDnd(type: String): Boolean =
+        suspendCoroutine { cont ->
+            manager.addServiceRequest(channel, WifiP2pDnsSdServiceRequest.newInstance(type), SuccessActionListener(cont))
+        }
+
+    /**
+     * Start discovering WiFi services
+     *
+     * @param call The Method call
+     * @param result The Method result
+     */
+    @Keep
+    @Suppress("unused", "UNUSED_PARAMETER")
+    fun discoverServices(call: MethodCall, result: Result) {
+        GlobalScope.launch(Dispatchers.Main) {
+            val sink = eventPool.getHandler(CH_SERVICES_CHANGE).sink
+
+            val upnpType = call.argument<String>("upnp")!!
+            val upnp = withContext(Dispatchers.Default) {
+                setupUpnp(upnpType)
+            }
+            if (upnp)
+                manager.setUpnpServiceResponseListener(channel, UpnpServiceListener(sink))
+
+            val dndType = call.argument<String>("dnd")!!
+            val dnd = withContext(Dispatchers.Default) {
+                setupDnd(dndType)
+            }
+            if (dnd)
+                manager.setDnsSdResponseListeners(channel, DndServiceListener(sink), DndServiceTxtListener(sink))
+
+            manager.discoverServices(channel, ResultActionListener(result))
+        }
+    }
+
+    /**
+     * Stop discovering WiFi services
+     *
+     * @param call The Method call
+     * @param result The Method result
+     */
+    @Keep
+    @Suppress("unused", "UNUSED_PARAMETER")
+    fun stopDiscoverServices(call: MethodCall, result: Result) {
+        manager.clearServiceRequests(channel, ResultActionListener(result))
     }
     //endregion
 
@@ -372,6 +443,8 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             "disconnectFromHost" -> disconnectFromHost(call, result)
             "sendDataToHost" -> sendDataToHost(call, result)
             "sendDataToClient" -> sendDataToClient(call, result)
+            "discoverServices" -> discoverServices(call, result)
+            "stopDiscoverServices" -> stopDiscoverServices(call, result)
             else -> result.notImplemented()
         }
     }

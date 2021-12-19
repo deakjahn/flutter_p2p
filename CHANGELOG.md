@@ -1,3 +1,8 @@
+## Added
+
+- null safety
+- discovering services
+
 ## 1.0.0
 
 Features:

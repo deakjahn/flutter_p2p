@@ -17,8 +17,7 @@ import android.util.Log
 import de.mintware.flutter_p2p.utility.ProtoHelper
 import io.flutter.plugin.common.EventChannel
 
-class WiFiDirectPeerListListener(private val peersChangedSink: EventChannel.EventSink?
-) : WifiP2pManager.PeerListListener {
+class WiFiDirectPeerListListener(private val peersChangedSink: EventChannel.EventSink?) : WifiP2pManager.PeerListListener {
     companion object {
         const val TAG = "Flutter P2P"
     }

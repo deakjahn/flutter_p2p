@@ -1,6 +1,6 @@
 ///
 //  Generated code. Do not modify.
-//  source: protos/protos.proto
+//  source: protos.proto
 //
 // @dart = 2.12
 // ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields
@@ -395,6 +395,163 @@ class WifiP2pDeviceList extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   $core.List<WifiP2pDevice> get devices => $_getList(0);
+}
+
+class WifiP2pService extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      const $core.bool.fromEnvironment('protobuf.omit_message_names')
+          ? ''
+          : 'WifiP2pService',
+      createEmptyInstance: create)
+    ..aOM<WifiP2pDevice>(
+        1,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'device',
+        subBuilder: WifiP2pDevice.create)
+    ..aOS(
+        2,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'instance')
+    ..aOS(
+        3,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'registration')
+    ..aOS(
+        4,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'domain')
+    ..m<$core.String, $core.String>(
+        5,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'txt',
+        entryClassName: 'WifiP2pService.TxtEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OS)
+    ..pPS(
+        6,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'uniqueNames',
+        protoName: 'uniqueNames')
+    ..hasRequiredFields = false;
+
+  WifiP2pService._() : super();
+  factory WifiP2pService({
+    WifiP2pDevice? device,
+    $core.String? instance,
+    $core.String? registration,
+    $core.String? domain,
+    $core.Map<$core.String, $core.String>? txt,
+    $core.Iterable<$core.String>? uniqueNames,
+  }) {
+    final _result = create();
+    if (device != null) {
+      _result.device = device;
+    }
+    if (instance != null) {
+      _result.instance = instance;
+    }
+    if (registration != null) {
+      _result.registration = registration;
+    }
+    if (domain != null) {
+      _result.domain = domain;
+    }
+    if (txt != null) {
+      _result.txt.addAll(txt);
+    }
+    if (uniqueNames != null) {
+      _result.uniqueNames.addAll(uniqueNames);
+    }
+    return _result;
+  }
+  factory WifiP2pService.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory WifiP2pService.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+      'Will be removed in next major version')
+  WifiP2pService clone() => WifiP2pService()..mergeFromMessage(this);
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+      'Will be removed in next major version')
+  WifiP2pService copyWith(void Function(WifiP2pService) updates) =>
+      super.copyWith((message) => updates(message as WifiP2pService))
+          as WifiP2pService; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static WifiP2pService create() => WifiP2pService._();
+  WifiP2pService createEmptyInstance() => create();
+  static $pb.PbList<WifiP2pService> createRepeated() =>
+      $pb.PbList<WifiP2pService>();
+  @$core.pragma('dart2js:noInline')
+  static WifiP2pService getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<WifiP2pService>(create);
+  static WifiP2pService? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  WifiP2pDevice get device => $_getN(0);
+  @$pb.TagNumber(1)
+  set device(WifiP2pDevice v) {
+    setField(1, v);
+  }
+
+  @$pb.TagNumber(1)
+  $core.bool hasDevice() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDevice() => clearField(1);
+  @$pb.TagNumber(1)
+  WifiP2pDevice ensureDevice() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.String get instance => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set instance($core.String v) {
+    $_setString(1, v);
+  }
+
+  @$pb.TagNumber(2)
+  $core.bool hasInstance() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearInstance() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get registration => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set registration($core.String v) {
+    $_setString(2, v);
+  }
+
+  @$pb.TagNumber(3)
+  $core.bool hasRegistration() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearRegistration() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get domain => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set domain($core.String v) {
+    $_setString(3, v);
+  }
+
+  @$pb.TagNumber(4)
+  $core.bool hasDomain() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearDomain() => clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.Map<$core.String, $core.String> get txt => $_getMap(4);
+
+  @$pb.TagNumber(6)
+  $core.List<$core.String> get uniqueNames => $_getList(5);
 }
 
 class ConnectionChange extends $pb.GeneratedMessage {
