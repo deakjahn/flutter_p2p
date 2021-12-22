@@ -3,6 +3,10 @@
 
 # flutter_p2p
 
+The original has been archived. As I needed to move it along to null safety and beyond for myself, I thought I might share it here for others to benefit from.
+
+***
+
 A Wi-Fi Direct Plugin for Flutter.
 
 This plugin is in alpha and only supports android at the moment.
