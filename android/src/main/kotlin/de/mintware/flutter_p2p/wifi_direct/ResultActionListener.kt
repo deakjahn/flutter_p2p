@@ -19,6 +19,12 @@ class ResultActionListener(private val result: MethodChannel.Result) : WifiP2pMa
     }
 
     override fun onFailure(reasonCode: Int) {
-        result.error(reasonCode.toString(), null, null)
+        val message = when (reasonCode) {
+          0 -> "internal error"
+          1 -> "unsupported"
+          2 -> "busy"
+          else -> "other: $reasonCode"
+        }
+        result.error("WiFi error: $message", null, null)
     }
 }
