@@ -25,6 +25,6 @@ class ResultActionListener(private val result: MethodChannel.Result) : WifiP2pMa
           2 -> "busy"
           else -> "other: $reasonCode"
         }
-        result.error("WiFi error: $message", null, null)
+        result.error(reasonCode.toString(), "WiFi error: $message", null)
     }
 }

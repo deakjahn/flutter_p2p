@@ -31,6 +31,7 @@ import java.lang.Exception
 import java.util.HashMap
 import android.content.pm.PackageManager
 import android.net.wifi.p2p.WifiP2pConfig
+import android.net.wifi.WpsInfo
 import androidx.annotation.Keep
 import de.mintware.flutter_p2p.utility.EventChannelPool
 import de.mintware.flutter_p2p.wifi_direct.*
@@ -276,6 +277,11 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
       val device = Protos.WifiP2pDevice.parseFrom(call.argument<ByteArray>("device"))
       manager.connect(channel, WifiP2pConfig().apply {
         deviceAddress = device.deviceAddress
+        wps.setup = if (device.wpsPbcSupported) WpsInfo.PBC
+          else if (device.wpsDisplaySupported) WpsInfo.DISPLAY
+          else if (device.wpsKeypadSupported) WpsInfo.KEYPAD
+          else WpsInfo.INVALID
+        groupOwnerIntent = 0
       }, ResultActionListener(result))
     } catch (e: Exception) {
       result.error("0", e.localizedMessage, e.stackTraceToString())
@@ -307,7 +313,7 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     try {
       val port = call.argument<Int>("port")
       if (port == null) {
-        result.error("Invalid port given", null, null)
+        result.error("0", "Invalid port given", null)
         return
       }
 
@@ -324,7 +330,7 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     try {
       val port = call.argument<Int>("port")
       if (port == null) {
-        result.error("Invalid port given", null, null)
+        result.error("0", "Invalid port given", null)
         return
       }
 
@@ -341,7 +347,7 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     try {
       val port = call.argument<Int>("port")
       if (port == null) {
-        result.error("Invalid port given", null, null)
+        result.error("0", "Invalid port given", null)
         return
       }
 
@@ -361,7 +367,7 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
       val timeout = call.argument<Int>("timeout") ?: config.timeout
 
       if (port == null || address == null) {
-        result.error("Invalid address or port given", null, null)
+        result.error("0", "Invalid address or port given", null)
         return
       }
 
@@ -378,7 +384,7 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     try {
       val port = call.argument<Int>("port")
       if (port == null) {
-        result.error("Invalid port given", null, null)
+        result.error("0", "Invalid port given", null)
         return
       }
       this.socketPool.disconnectFromHost(port)
