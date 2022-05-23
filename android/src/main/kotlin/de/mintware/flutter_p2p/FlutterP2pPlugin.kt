@@ -38,6 +38,8 @@ import de.mintware.flutter_p2p.wifi_direct.*
 import android.app.Activity
 import kotlinx.coroutines.*
 import kotlin.coroutines.*
+import android.net.wifi.p2p.WifiP2pManager.ActionListener
+
 
 class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
   private var activity: Activity? = null
@@ -216,18 +218,6 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     manager.stopPeerDiscovery(channel, ResultActionListener(result))
   }
 
-  suspend private fun setupUpnp(type: String): Boolean =
-    suspendCoroutine { cont ->
-//    manager.addServiceRequest(channel, WifiP2pUpnpServiceRequest.newInstance(type), SuccessActionListener(cont))
-      manager.addServiceRequest(channel, WifiP2pUpnpServiceRequest.newInstance(), SuccessActionListener(cont))
-    }
-
-  suspend private fun setupDnd(type: String): Boolean =
-    suspendCoroutine { cont ->
-//    manager.addServiceRequest(channel, WifiP2pDnsSdServiceRequest.newInstance(type), SuccessActionListener(cont))
-      manager.addServiceRequest(channel, WifiP2pDnsSdServiceRequest.newInstance(), SuccessActionListener(cont))
-    }
-
   /**
    * Start discovering WiFi services
    *
@@ -239,22 +229,41 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
   fun discoverServices(call: MethodCall, result: Result) {
     GlobalScope.launch(Dispatchers.Main) {
       val sink = eventPool.getHandler(CH_SERVICES_CHANGE).sink
-
       val upnpType = call.argument<String>("upnp")!!
-      val upnp = withContext(Dispatchers.Default) {
-        setupUpnp(upnpType)
-      }
-      if (upnp)
-        manager.setUpnpServiceResponseListener(channel, UpnpServiceListener(sink))
-
       val dndType = call.argument<String>("dnd")!!
-      val dnd = withContext(Dispatchers.Default) {
-        setupDnd(dndType)
-      }
-      if (dnd)
+
+      withContext(Dispatchers.Default) {
+        manager.setUpnpServiceResponseListener(channel, UpnpServiceListener(sink))
         manager.setDnsSdResponseListeners(channel, DndServiceListener(sink), DndServiceTxtListener(sink))
 
-      manager.discoverServices(channel, ResultActionListener(result))
+        manager.clearServiceRequests(channel, object : ActionListener {
+          override fun onSuccess() {
+            manager.addServiceRequest(channel, WifiP2pUpnpServiceRequest.newInstance(upnpType), object : ActionListener {
+              override fun onSuccess() {
+              }
+
+              override fun onFailure(arg0: Int) {
+                result.error(arg0.toString(), "Service request error", null)
+              }
+            })
+
+            manager.addServiceRequest(channel, WifiP2pDnsSdServiceRequest.newInstance(dndType), object : ActionListener {
+              override fun onSuccess() {
+              }
+    
+              override fun onFailure(arg0: Int) {
+                result.error(arg0.toString(), "Service request error", null)
+              }
+            })
+
+            manager.discoverServices(channel, ResultActionListener(result))
+          }
+
+          override fun onFailure(arg0: Int) {
+            result.error(arg0.toString(), "Service request error", null)
+          }
+        })
+      }
     }
   }
 
@@ -278,9 +287,9 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
       manager.connect(channel, WifiP2pConfig().apply {
         deviceAddress = device.deviceAddress
         wps.setup = if (device.wpsPbcSupported) WpsInfo.PBC
-          else if (device.wpsDisplaySupported) WpsInfo.DISPLAY
-          else if (device.wpsKeypadSupported) WpsInfo.KEYPAD
-          else WpsInfo.INVALID
+        else if (device.wpsDisplaySupported) WpsInfo.DISPLAY
+        else if (device.wpsKeypadSupported) WpsInfo.KEYPAD
+        else WpsInfo.INVALID
         groupOwnerIntent = 0
       }, ResultActionListener(result))
     } catch (e: Exception) {
