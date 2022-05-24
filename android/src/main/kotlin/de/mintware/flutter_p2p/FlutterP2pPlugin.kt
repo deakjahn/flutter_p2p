@@ -188,6 +188,7 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     try {
       context.unregisterReceiver(receiver)
+      receiver = null;
       result.success(true)
     } catch (e: Exception) {
       result.success(false)
