@@ -31,6 +31,7 @@ import java.lang.Exception
 import java.util.HashMap
 import android.content.pm.PackageManager
 import android.net.wifi.p2p.WifiP2pConfig
+import android.net.wifi.p2p.WifiP2pInfo
 import android.net.wifi.WpsInfo
 import androidx.annotation.Keep
 import de.mintware.flutter_p2p.utility.EventChannelPool
@@ -306,6 +307,14 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
   @Keep
   @Suppress("unused", "UNUSED_PARAMETER")
+  fun groupOwnerAddress(call: MethodCall, result: Result) {
+    manager.requestConnectionInfo(channel, { info ->
+      result.success(info.groupOwnerAddress.hostAddress)
+    })
+  }
+
+  @Keep
+  @Suppress("unused", "UNUSED_PARAMETER")
   fun removeGroup(call: MethodCall, result: Result) {
     manager.requestGroupInfo(channel) { group ->
       if (group != null) {
@@ -439,6 +448,7 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
       "stopDiscover" -> stopDiscover(call, result)
       "connect" -> connect(call, result)
       "cancelConnect" -> cancelConnect(call, result)
+      "groupOwnerAddress" -> groupOwnerAddress(call, result)
       "removeGroup" -> removeGroup(call, result)
       "openHostPort" -> openHostPort(call, result)
       "closeHostPort" -> closeHostPort(call, result)

@@ -74,6 +74,11 @@ class FlutterP2p {
     return result!;
   }
 
+  static Future<String> groupOwnerAddress(WifiP2pDevice device) async {
+    final result = await _channel.invokeMethod<String>("groupOwnerAddress", {});
+    return result!;
+  }
+
   static Future<bool> removeGroup() async {
     final result = await _channel.invokeMethod<bool>("removeGroup", {});
     return result!;
