@@ -95,3 +95,20 @@ message SocketMessage {
 message DiscoveryStateChange {
     bool isDiscovering = 1;
 }
+
+message WifiP2pGroup {
+    int32 frequency = 1;
+    string interface = 2;
+    int32 networkId = 3;
+    string networkName = 4;
+    WifiP2pDevice owner = 5;
+    string passphrase = 6;
+    bool isGroupOwner = 7;
+    repeated WifiP2pDevice clientList = 8;
+
+    enum NetworkState {
+        UNKNOWN = 0;
+        NETWORK_ID_TEMPORARY = -1;
+        NETWORK_ID_PERSISTENT = -2;
+    }
+}

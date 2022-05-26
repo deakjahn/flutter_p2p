@@ -285,3 +285,46 @@ const DiscoveryStateChange$json = const {
 /// Descriptor for `DiscoveryStateChange`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List discoveryStateChangeDescriptor = $convert.base64Decode(
     'ChREaXNjb3ZlcnlTdGF0ZUNoYW5nZRIkCg1pc0Rpc2NvdmVyaW5nGAEgASgIUg1pc0Rpc2NvdmVyaW5n');
+@$core.Deprecated('Use wifiP2pGroupDescriptor instead')
+const WifiP2pGroup$json = const {
+  '1': 'WifiP2pGroup',
+  '2': const [
+    const {'1': 'frequency', '3': 1, '4': 1, '5': 5, '10': 'frequency'},
+    const {'1': 'interface', '3': 2, '4': 1, '5': 9, '10': 'interface'},
+    const {'1': 'networkId', '3': 3, '4': 1, '5': 5, '10': 'networkId'},
+    const {'1': 'networkName', '3': 4, '4': 1, '5': 9, '10': 'networkName'},
+    const {
+      '1': 'owner',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.WifiP2pDevice',
+      '10': 'owner'
+    },
+    const {'1': 'passphrase', '3': 6, '4': 1, '5': 9, '10': 'passphrase'},
+    const {'1': 'isGroupOwner', '3': 7, '4': 1, '5': 8, '10': 'isGroupOwner'},
+    const {
+      '1': 'clientList',
+      '3': 8,
+      '4': 3,
+      '5': 11,
+      '6': '.WifiP2pDevice',
+      '10': 'clientList'
+    },
+  ],
+  '4': const [WifiP2pGroup_NetworkState$json],
+};
+
+@$core.Deprecated('Use wifiP2pGroupDescriptor instead')
+const WifiP2pGroup_NetworkState$json = const {
+  '1': 'NetworkState',
+  '2': const [
+    const {'1': 'UNKNOWN', '2': 0},
+    const {'1': 'NETWORK_ID_TEMPORARY', '2': -1},
+    const {'1': 'NETWORK_ID_PERSISTENT', '2': -2},
+  ],
+};
+
+/// Descriptor for `WifiP2pGroup`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List wifiP2pGroupDescriptor = $convert.base64Decode(
+    'CgxXaWZpUDJwR3JvdXASHAoJZnJlcXVlbmN5GAEgASgFUglmcmVxdWVuY3kSHAoJaW50ZXJmYWNlGAIgASgJUglpbnRlcmZhY2USHAoJbmV0d29ya0lkGAMgASgFUgluZXR3b3JrSWQSIAoLbmV0d29ya05hbWUYBCABKAlSC25ldHdvcmtOYW1lEiQKBW93bmVyGAUgASgLMg4uV2lmaVAycERldmljZVIFb3duZXISHgoKcGFzc3BocmFzZRgGIAEoCVIKcGFzc3BocmFzZRIiCgxpc0dyb3VwT3duZXIYByABKAhSDGlzR3JvdXBPd25lchIuCgpjbGllbnRMaXN0GAggAygLMg4uV2lmaVAycERldmljZVIKY2xpZW50TGlzdCJiCgxOZXR3b3JrU3RhdGUSCwoHVU5LTk9XThAAEiEKFE5FVFdPUktfSURfVEVNUE9SQVJZEP///////////wESIgoVTkVUV09SS19JRF9QRVJTSVNURU5UEP7//////////wE=');

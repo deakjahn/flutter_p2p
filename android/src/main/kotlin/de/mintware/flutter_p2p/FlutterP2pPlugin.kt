@@ -40,6 +40,7 @@ import android.app.Activity
 import kotlinx.coroutines.*
 import kotlin.coroutines.*
 import android.net.wifi.p2p.WifiP2pManager.ActionListener
+import de.mintware.flutter_p2p.utility.ProtoHelper
 
 
 class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -236,33 +237,38 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
       withContext(Dispatchers.Default) {
         manager.setUpnpServiceResponseListener(channel, UpnpServiceListener(sink))
-        manager.setDnsSdResponseListeners(channel, DndServiceListener(sink), DndServiceTxtListener(sink))
-
-        manager.clearServiceRequests(channel, object : ActionListener {
+        manager.addServiceRequest(channel, WifiP2pUpnpServiceRequest.newInstance(upnpType), object : ActionListener {
           override fun onSuccess() {
-            manager.addServiceRequest(channel, WifiP2pUpnpServiceRequest.newInstance(upnpType), object : ActionListener {
-              override fun onSuccess() {
-              }
-
-              override fun onFailure(arg0: Int) {
-                result.error(arg0.toString(), "Service request error", null)
-              }
-            })
-
-            manager.addServiceRequest(channel, WifiP2pDnsSdServiceRequest.newInstance(dndType), object : ActionListener {
-              override fun onSuccess() {
-              }
-    
-              override fun onFailure(arg0: Int) {
-                result.error(arg0.toString(), "Service request error", null)
-              }
-            })
-
-            manager.discoverServices(channel, ResultActionListener(result))
           }
 
           override fun onFailure(arg0: Int) {
-            result.error(arg0.toString(), "Service request error", null)
+            result.error(arg0.toString(), "WiFi error: service request error", null)
+          }
+        })
+
+        manager.setDnsSdResponseListeners(channel, DndServiceListener(sink), DndServiceTxtListener(sink))
+        manager.addServiceRequest(channel, WifiP2pDnsSdServiceRequest.newInstance(dndType), object : ActionListener {
+          override fun onSuccess() {
+            result.success(true)
+          }
+
+          override fun onFailure(arg0: Int) {
+            result.error(arg0.toString(), "WiFi error: service request error", null)
+          }
+        })
+
+        manager.discoverServices(channel, object : ActionListener {
+          override fun onSuccess() {
+          }
+
+          override fun onFailure(arg0: Int) {
+            val message = when (arg0) {
+              0 -> "internal error"
+              1 -> "unsupported"
+              2 -> "busy"
+              else -> "other error"
+            }
+            result.error(arg0.toString(), "WiFi error: $message", null)
           }
         })
       }
@@ -307,9 +313,9 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
   @Keep
   @Suppress("unused", "UNUSED_PARAMETER")
-  fun groupOwnerAddress(call: MethodCall, result: Result) {
+  fun getConnectionInfo(call: MethodCall, result: Result) {
     manager.requestConnectionInfo(channel, { info ->
-      result.success(info.groupOwnerAddress.hostAddress)
+      result.success(ProtoHelper.create(info).toByteArray())
     })
   }
 
@@ -324,6 +330,14 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         result.success(true)
       }
     }
+  }
+
+  @Keep
+  @Suppress("unused", "UNUSED_PARAMETER")
+  fun getGroupInfo(call: MethodCall, result: Result) {
+    manager.requestGroupInfo(channel, { group ->
+      result.success(ProtoHelper.create(group).toByteArray())
+    })
   }
 
   @Keep
@@ -448,8 +462,9 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
       "stopDiscover" -> stopDiscover(call, result)
       "connect" -> connect(call, result)
       "cancelConnect" -> cancelConnect(call, result)
-      "groupOwnerAddress" -> groupOwnerAddress(call, result)
+      "getConnectionInfo" -> getConnectionInfo(call, result)
       "removeGroup" -> removeGroup(call, result)
+      "getGroupInfo" -> getGroupInfo(call, result)
       "openHostPort" -> openHostPort(call, result)
       "closeHostPort" -> closeHostPort(call, result)
       "acceptPort" -> acceptPort(call, result)

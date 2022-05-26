@@ -1140,3 +1140,215 @@ class DiscoveryStateChange extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearIsDiscovering() => clearField(1);
 }
+
+class WifiP2pGroup extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      const $core.bool.fromEnvironment('protobuf.omit_message_names')
+          ? ''
+          : 'WifiP2pGroup',
+      createEmptyInstance: create)
+    ..a<$core.int>(
+        1,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'frequency',
+        $pb.PbFieldType.O3)
+    ..aOS(
+        2,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'interface')
+    ..a<$core.int>(
+        3,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'networkId',
+        $pb.PbFieldType.O3,
+        protoName: 'networkId')
+    ..aOS(
+        4,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'networkName',
+        protoName: 'networkName')
+    ..aOM<WifiP2pDevice>(
+        5,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'owner',
+        subBuilder: WifiP2pDevice.create)
+    ..aOS(
+        6,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'passphrase')
+    ..aOB(
+        7,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'isGroupOwner',
+        protoName: 'isGroupOwner')
+    ..pc<WifiP2pDevice>(
+        8,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'clientList',
+        $pb.PbFieldType.PM,
+        protoName: 'clientList',
+        subBuilder: WifiP2pDevice.create)
+    ..hasRequiredFields = false;
+
+  WifiP2pGroup._() : super();
+  factory WifiP2pGroup({
+    $core.int? frequency,
+    $core.String? interface,
+    $core.int? networkId,
+    $core.String? networkName,
+    WifiP2pDevice? owner,
+    $core.String? passphrase,
+    $core.bool? isGroupOwner,
+    $core.Iterable<WifiP2pDevice>? clientList,
+  }) {
+    final _result = create();
+    if (frequency != null) {
+      _result.frequency = frequency;
+    }
+    if (interface != null) {
+      _result.interface = interface;
+    }
+    if (networkId != null) {
+      _result.networkId = networkId;
+    }
+    if (networkName != null) {
+      _result.networkName = networkName;
+    }
+    if (owner != null) {
+      _result.owner = owner;
+    }
+    if (passphrase != null) {
+      _result.passphrase = passphrase;
+    }
+    if (isGroupOwner != null) {
+      _result.isGroupOwner = isGroupOwner;
+    }
+    if (clientList != null) {
+      _result.clientList.addAll(clientList);
+    }
+    return _result;
+  }
+  factory WifiP2pGroup.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory WifiP2pGroup.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+      'Will be removed in next major version')
+  WifiP2pGroup clone() => WifiP2pGroup()..mergeFromMessage(this);
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+      'Will be removed in next major version')
+  WifiP2pGroup copyWith(void Function(WifiP2pGroup) updates) =>
+      super.copyWith((message) => updates(message as WifiP2pGroup))
+          as WifiP2pGroup; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static WifiP2pGroup create() => WifiP2pGroup._();
+  WifiP2pGroup createEmptyInstance() => create();
+  static $pb.PbList<WifiP2pGroup> createRepeated() =>
+      $pb.PbList<WifiP2pGroup>();
+  @$core.pragma('dart2js:noInline')
+  static WifiP2pGroup getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<WifiP2pGroup>(create);
+  static WifiP2pGroup? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get frequency => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set frequency($core.int v) {
+    $_setSignedInt32(0, v);
+  }
+
+  @$pb.TagNumber(1)
+  $core.bool hasFrequency() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFrequency() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get interface => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set interface($core.String v) {
+    $_setString(1, v);
+  }
+
+  @$pb.TagNumber(2)
+  $core.bool hasInterface() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearInterface() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get networkId => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set networkId($core.int v) {
+    $_setSignedInt32(2, v);
+  }
+
+  @$pb.TagNumber(3)
+  $core.bool hasNetworkId() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearNetworkId() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get networkName => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set networkName($core.String v) {
+    $_setString(3, v);
+  }
+
+  @$pb.TagNumber(4)
+  $core.bool hasNetworkName() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearNetworkName() => clearField(4);
+
+  @$pb.TagNumber(5)
+  WifiP2pDevice get owner => $_getN(4);
+  @$pb.TagNumber(5)
+  set owner(WifiP2pDevice v) {
+    setField(5, v);
+  }
+
+  @$pb.TagNumber(5)
+  $core.bool hasOwner() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearOwner() => clearField(5);
+  @$pb.TagNumber(5)
+  WifiP2pDevice ensureOwner() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  $core.String get passphrase => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set passphrase($core.String v) {
+    $_setString(5, v);
+  }
+
+  @$pb.TagNumber(6)
+  $core.bool hasPassphrase() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearPassphrase() => clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.bool get isGroupOwner => $_getBF(6);
+  @$pb.TagNumber(7)
+  set isGroupOwner($core.bool v) {
+    $_setBool(6, v);
+  }
+
+  @$pb.TagNumber(7)
+  $core.bool hasIsGroupOwner() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearIsGroupOwner() => clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.List<WifiP2pDevice> get clientList => $_getList(7);
+}

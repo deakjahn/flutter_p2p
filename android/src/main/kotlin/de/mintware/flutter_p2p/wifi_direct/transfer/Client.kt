@@ -24,7 +24,7 @@ class Client(private val address: String,
 
     init {
         socket = Socket()
-        socket.bind(null)
+//      socket.bind(null)
     }
 
     override fun doInBackground(vararg params: Void?): Boolean {

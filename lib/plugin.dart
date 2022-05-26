@@ -48,10 +48,7 @@ class FlutterP2p {
     return result!;
   }
 
-  static Future<bool> discoverServices(
-      String upnpType,
-      String dndType,
-      ) async {
+  static Future<bool> discoverServices(String upnpType, String dndType) async {
     final result = await _channel.invokeMethod<bool>("discoverServices", {
       "upnp": upnpType,
       "dnd": dndType,
@@ -64,7 +61,7 @@ class FlutterP2p {
     return result!;
   }
 
- static Future<bool> connect(WifiP2pDevice device) async {
+  static Future<bool> connect(WifiP2pDevice device) async {
     final result = await _channel.invokeMethod<bool>("connect", {"device": device.writeToBuffer()});
     return result!;
   }
@@ -74,14 +71,19 @@ class FlutterP2p {
     return result!;
   }
 
-  static Future<String> groupOwnerAddress(WifiP2pDevice device) async {
-    final result = await _channel.invokeMethod<String>("groupOwnerAddress", {});
-    return result!;
+  static Future<WifiP2pInfo> getConnectionInfo() async {
+    final result = await _channel.invokeMethod<Uint8List>("getConnectionInfo", {});
+    return WifiP2pInfo.fromBuffer(result!);
   }
 
   static Future<bool> removeGroup() async {
     final result = await _channel.invokeMethod<bool>("removeGroup", {});
     return result!;
+  }
+
+  static Future<WifiP2pGroup> getGroupInfo() async {
+    final result = await _channel.invokeMethod<Uint8List>("getGroupInfo", {});
+    return WifiP2pGroup.fromBuffer(result!);
   }
 
   static Future<P2pSocket> openHostPort(int port) async {
@@ -99,11 +101,7 @@ class FlutterP2p {
     return result!;
   }
 
-  static Future<P2pSocket?> connectToHost(
-    String address,
-    int port, {
-    int timeout = 500,
-  }) async {
+  static Future<P2pSocket?> connectToHost(String address, int port, {int timeout = 500}) async {
     if (await _channel.invokeMethod("connectToHost", {
       "address": address,
       "port": port,

@@ -23,7 +23,7 @@ class ResultActionListener(private val result: MethodChannel.Result) : WifiP2pMa
           0 -> "internal error"
           1 -> "unsupported"
           2 -> "busy"
-          else -> "other: $reasonCode"
+          else -> "other error"
         }
         result.error(reasonCode.toString(), "WiFi error: $message", null)
     }

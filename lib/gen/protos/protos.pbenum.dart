@@ -150,3 +150,36 @@ class NetworkInfo_DetailedState extends $pb.ProtobufEnum {
 
   const NetworkInfo_DetailedState._($core.int v, $core.String n) : super(v, n);
 }
+
+class WifiP2pGroup_NetworkState extends $pb.ProtobufEnum {
+  static const WifiP2pGroup_NetworkState UNKNOWN = WifiP2pGroup_NetworkState._(
+      0,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'UNKNOWN');
+  static const WifiP2pGroup_NetworkState NETWORK_ID_TEMPORARY =
+      WifiP2pGroup_NetworkState._(
+          -1,
+          const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+              ? ''
+              : 'NETWORK_ID_TEMPORARY');
+  static const WifiP2pGroup_NetworkState NETWORK_ID_PERSISTENT =
+      WifiP2pGroup_NetworkState._(
+          -2,
+          const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+              ? ''
+              : 'NETWORK_ID_PERSISTENT');
+
+  static const $core.List<WifiP2pGroup_NetworkState> values =
+      <WifiP2pGroup_NetworkState>[
+    UNKNOWN,
+    NETWORK_ID_TEMPORARY,
+    NETWORK_ID_PERSISTENT,
+  ];
+
+  static final $core.Map<$core.int, WifiP2pGroup_NetworkState> _byValue =
+      $pb.ProtobufEnum.initByValue(values);
+  static WifiP2pGroup_NetworkState? valueOf($core.int value) => _byValue[value];
+
+  const WifiP2pGroup_NetworkState._($core.int v, $core.String n) : super(v, n);
+}
