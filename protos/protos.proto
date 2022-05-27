@@ -101,9 +101,9 @@ message WifiP2pGroup {
     string interface = 2;
     int32 networkId = 3;
     string networkName = 4;
-    WifiP2pDevice owner = 5;
-    string passphrase = 6;
-    bool isGroupOwner = 7;
+    string passphrase = 5;
+    bool isGroupOwner = 6;
+    WifiP2pDevice owner = 7;
     repeated WifiP2pDevice clientList = 8;
 
     enum NetworkState {

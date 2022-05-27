@@ -33,6 +33,7 @@ import android.content.pm.PackageManager
 import android.net.wifi.p2p.WifiP2pConfig
 import android.net.wifi.p2p.WifiP2pInfo
 import android.net.wifi.WpsInfo
+import android.net.MacAddress
 import androidx.annotation.Keep
 import de.mintware.flutter_p2p.utility.EventChannelPool
 import de.mintware.flutter_p2p.wifi_direct.*
@@ -230,49 +231,32 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
   @Keep
   @Suppress("unused", "UNUSED_PARAMETER")
   fun discoverServices(call: MethodCall, result: Result) {
-    GlobalScope.launch(Dispatchers.Main) {
-      val sink = eventPool.getHandler(CH_SERVICES_CHANGE).sink
-      val upnpType = call.argument<String>("upnp")!!
-      val dndType = call.argument<String>("dnd")!!
+    val upnpType = call.argument<String>("upnp")!!
+    val dndType = call.argument<String>("dnd")!!
 
-      withContext(Dispatchers.Default) {
-        manager.setUpnpServiceResponseListener(channel, UpnpServiceListener(sink))
-        manager.addServiceRequest(channel, WifiP2pUpnpServiceRequest.newInstance(upnpType), object : ActionListener {
-          override fun onSuccess() {
-          }
-
-          override fun onFailure(arg0: Int) {
-            result.error(arg0.toString(), "WiFi error: service request error", null)
-          }
-        })
-
+    val sink = eventPool.getHandler(CH_SERVICES_CHANGE).sink
+    val upnpRequest = if (upnpType.isNotEmpty()) WifiP2pUpnpServiceRequest.newInstance(upnpType) else WifiP2pUpnpServiceRequest.newInstance()
+    val dnpRequest = if (dndType.isNotEmpty()) WifiP2pDnsSdServiceRequest.newInstance(dndType) else WifiP2pDnsSdServiceRequest.newInstance()
+    
+    manager.setUpnpServiceResponseListener(channel, UpnpServiceListener(sink))
+    manager.addServiceRequest(channel, upnpRequest, object : ActionListener {
+      override fun onSuccess() {
         manager.setDnsSdResponseListeners(channel, DndServiceListener(sink), DndServiceTxtListener(sink))
-        manager.addServiceRequest(channel, WifiP2pDnsSdServiceRequest.newInstance(dndType), object : ActionListener {
+        manager.addServiceRequest(channel, dnpRequest, object : ActionListener {
           override fun onSuccess() {
-            result.success(true)
+            manager.discoverServices(channel, ResultActionListener(result))
           }
 
           override fun onFailure(arg0: Int) {
             result.error(arg0.toString(), "WiFi error: service request error", null)
-          }
-        })
-
-        manager.discoverServices(channel, object : ActionListener {
-          override fun onSuccess() {
-          }
-
-          override fun onFailure(arg0: Int) {
-            val message = when (arg0) {
-              0 -> "internal error"
-              1 -> "unsupported"
-              2 -> "busy"
-              else -> "other error"
-            }
-            result.error(arg0.toString(), "WiFi error: $message", null)
           }
         })
       }
-    }
+
+      override fun onFailure(arg0: Int) {
+        result.error(arg0.toString(), "WiFi error: service request error", null)
+      }
+    })
   }
 
   /**
@@ -292,6 +276,14 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
   fun connect(call: MethodCall, result: Result) {
     try {
       val device = Protos.WifiP2pDevice.parseFrom(call.argument<ByteArray>("device"))
+      val name = call.argument<String>("name")
+      val pass = call.argument<String>("passphrase")
+
+      val config = WifiP2pConfig.Builder()
+      if (name != null)
+        config.setNetworkName(name)
+      if (pass != null)
+        config.setPassphrase(pass);
       manager.connect(channel, WifiP2pConfig().apply {
         deviceAddress = device.deviceAddress
         wps.setup = if (device.wpsPbcSupported) WpsInfo.PBC
@@ -315,7 +307,11 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
   @Suppress("unused", "UNUSED_PARAMETER")
   fun getConnectionInfo(call: MethodCall, result: Result) {
     manager.requestConnectionInfo(channel, { info ->
-      result.success(ProtoHelper.create(info).toByteArray())
+      if (info != null) {
+        result.success(ProtoHelper.create(info).toByteArray())
+      } else {
+        result.error("0", "No connection info", null)
+      }
     })
   }
 
@@ -336,7 +332,11 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
   @Suppress("unused", "UNUSED_PARAMETER")
   fun getGroupInfo(call: MethodCall, result: Result) {
     manager.requestGroupInfo(channel, { group ->
-      result.success(ProtoHelper.create(group).toByteArray())
+      if (group != null) {
+        result.success(ProtoHelper.create(group).toByteArray())
+      } else {
+        result.error("0", "No group info", null)
+      }
     })
   }
 

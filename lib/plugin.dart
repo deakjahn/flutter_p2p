@@ -61,8 +61,12 @@ class FlutterP2p {
     return result!;
   }
 
-  static Future<bool> connect(WifiP2pDevice device) async {
-    final result = await _channel.invokeMethod<bool>("connect", {"device": device.writeToBuffer()});
+  static Future<bool> connect(WifiP2pDevice device, {String? name, String? passphrase}) async {
+    final result = await _channel.invokeMethod<bool>("connect", {
+      "device": device.writeToBuffer(),
+      "name": name,
+      "passphrase": passphrase,
+    });
     return result!;
   }
 
