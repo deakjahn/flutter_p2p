@@ -18,6 +18,6 @@ import io.flutter.plugin.common.EventChannel
 
 class DndServiceListener(private val servicesChangedSink: EventChannel.EventSink?) : WifiP2pManager.DnsSdServiceResponseListener {
     override fun onDnsSdServiceAvailable (instanceName: String, registrationType: String, srcDevice: WifiP2pDevice) {
-        servicesChangedSink?.success(ProtoHelper.create(srcDevice, instanceName, registrationType, null, emptyMap(), emptyList()).toByteArray())
+       servicesChangedSink?.success(ProtoHelper.create(srcDevice, instanceName, registrationType, null, emptyMap(), emptyList()).toByteArray())
     }
 }

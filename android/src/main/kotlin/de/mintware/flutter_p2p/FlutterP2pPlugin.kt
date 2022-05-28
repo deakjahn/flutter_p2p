@@ -33,7 +33,6 @@ import android.content.pm.PackageManager
 import android.net.wifi.p2p.WifiP2pConfig
 import android.net.wifi.p2p.WifiP2pInfo
 import android.net.wifi.WpsInfo
-import android.net.MacAddress
 import androidx.annotation.Keep
 import de.mintware.flutter_p2p.utility.EventChannelPool
 import de.mintware.flutter_p2p.wifi_direct.*
@@ -236,13 +235,13 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     val sink = eventPool.getHandler(CH_SERVICES_CHANGE).sink
     val upnpRequest = if (upnpType.isNotEmpty()) WifiP2pUpnpServiceRequest.newInstance(upnpType) else WifiP2pUpnpServiceRequest.newInstance()
-    val dnpRequest = if (dndType.isNotEmpty()) WifiP2pDnsSdServiceRequest.newInstance(dndType) else WifiP2pDnsSdServiceRequest.newInstance()
-    
+    val dndRequest = if (dndType.isNotEmpty()) WifiP2pDnsSdServiceRequest.newInstance(dndType) else WifiP2pDnsSdServiceRequest.newInstance()
+
     manager.setUpnpServiceResponseListener(channel, UpnpServiceListener(sink))
     manager.addServiceRequest(channel, upnpRequest, object : ActionListener {
       override fun onSuccess() {
         manager.setDnsSdResponseListeners(channel, DndServiceListener(sink), DndServiceTxtListener(sink))
-        manager.addServiceRequest(channel, dnpRequest, object : ActionListener {
+        manager.addServiceRequest(channel, dndRequest, object : ActionListener {
           override fun onSuccess() {
             manager.discoverServices(channel, ResultActionListener(result))
           }

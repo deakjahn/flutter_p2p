@@ -18,6 +18,6 @@ import io.flutter.plugin.common.EventChannel
 
 class UpnpServiceListener(private val servicesChangedSink: EventChannel.EventSink?) : WifiP2pManager.UpnpServiceResponseListener {
     override fun onUpnpServiceAvailable(uniqueServiceNames: List<String>, srcDevice: WifiP2pDevice) {
-        servicesChangedSink?.success(ProtoHelper.create(srcDevice, null, null, null, emptyMap(), uniqueServiceNames).toByteArray())
+       servicesChangedSink?.success(ProtoHelper.create(srcDevice, null, null, null, emptyMap(), uniqueServiceNames).toByteArray())
     }
 }
