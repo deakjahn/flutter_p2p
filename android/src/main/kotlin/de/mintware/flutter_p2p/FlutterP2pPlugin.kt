@@ -16,12 +16,11 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.*
 import io.flutter.plugin.common.PluginRegistry.Registrar
 import android.content.ContentValues.TAG
-import android.content.Context
-import android.content.IntentFilter
+import android.content.*
+import androidx.core.content.ContextCompat
 import android.net.wifi.p2p.WifiP2pManager
 import android.net.wifi.p2p.nsd.*
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.util.Log
 import androidx.annotation.NonNull
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -140,7 +139,10 @@ class FlutterP2pPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
   @Suppress("unused", "UNUSED_PARAMETER")
   private fun isLocationPermissionGranted(call: MethodCall, result: Result) {
     val permission = Manifest.permission.ACCESS_FINE_LOCATION
-    result.success(PackageManager.PERMISSION_GRANTED == context.checkSelfPermission(permission))
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+      result.success(PackageManager.PERMISSION_GRANTED == context.checkSelfPermission(permission))
+    else
+      result.success(PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(context, permission))
   }
 
   /**
